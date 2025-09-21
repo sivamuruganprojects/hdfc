@@ -157,18 +157,23 @@ function download_pdf(response) {
     const element = document.getElementById('pdf-content');
 
     const opt = {
-        margin: [227, 20, 80, 30],
-        filename: 'statement.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 8, useCORS: true },
-        jsPDF: {
-            unit: 'pt',
-            format: [637.79527559, 841.88976378],
-            orientation: 'portrait',
-
+        margin: [10, 10, 10, 10],
+        filename: 'hdfc_statement.pdf',
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            width: element.scrollWidth,
+            height: element.scrollHeight
         },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all'] }
     };
 
     html2pdf()
@@ -196,26 +201,26 @@ function download_pdf(response) {
     // pdf.setDrawColor(102, 102, 102);  // grey border
     // pdf.setLineWidth(0.75);
     // pdf.rect(boxMarginLeft, boxMarginTop, boxWidth, boxHeight);
-                // ✅ HEADER SECTION
+                // Add consistent header styling
                 try {
-                    // Logo at top-left
-                    pdf.addImage(headerLogo, "PNG", 25, 40, 150, 17);
+                    pdf.addImage(headerLogo, "PNG", 20, 15, 120, 15);
                 } catch (e) {
                     console.warn("Header logo failed to load:", e);
                 }
 
-                // Page No (top-center)
-                pdf.setFont("times", "normal");
-                pdf.setFontSize(8);
+                // Page number and header text styling
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(9);
                 pdf.setTextColor(0, 0, 0);
-                const pageText = `Page No.: ${i}`;
+                const pageText = `Page ${i} of ${totalPages}`;
                 const textWidth = pdf.getTextWidth(pageText);
-                pdf.text(pageText, (pageWidth - textWidth) / 2, 20, { baseline: "top" });
+                pdf.text(pageText, (pageWidth - textWidth) / 2, 35);
 
-                // Header text (top-right)
-                const headerText = "Statement of account";
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(10);
+                const headerText = "Account Statement";
                 const headerWidth = pdf.getTextWidth(headerText);
-                pdf.text(headerText, pageWidth - headerWidth - 30, 20, { baseline: "top" });
+                pdf.text(headerText, pageWidth - headerWidth - 20, 25);
 
                 /* --- Additional Header Content --- */
                 let headerY = 55 + 40;       // inside 60mm reserved header
@@ -238,7 +243,7 @@ function download_pdf(response) {
 
 
 
-                pdf.setFont("times", "bold");
+                pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(9);
                 pdf.setTextColor(0, 0, 0);
 
@@ -264,28 +269,34 @@ function download_pdf(response) {
                 let blockWidth = 250; // adjust as needed
                 let blockHeight = lines.length * lineHeight + 10; // +10 for padding
 
-                // draw rectangle around content
+                // draw clean rectangle around customer details
                 pdf.setDrawColor(0, 0, 0);
-                pdf.setLineWidth(1.5);
+                pdf.setLineWidth(0.5);
                 pdf.rect(blockX - 5, blockY - 10, blockWidth, blockHeight);
 
-                // print text inside block
+                // print customer details with consistent formatting
                 let currentY = blockY;
-                lines.forEach(line => {
-                    if (line.bold) {
-                        pdf.setFont("times", "bold");
+                lines.forEach((line, index) => {
+                    if (index === 0) {
+                        pdf.setFont("helvetica", "bold");
+                        pdf.setFontSize(10);
                     } else {
-                        pdf.setFont("times", "normal");
+                        pdf.setFont("helvetica", "normal");
+                        pdf.setFontSize(9);
                     }
                     pdf.text(line.text, blockX, currentY);
                     currentY += lineHeight;
                 });
 
                 currentY += 12;
-                pdf.text("Nomination : Registered", 30, currentY);
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(8);
+                pdf.text("Nomination: Registered", 30, currentY);
 
-                currentY += 20;
-                pdf.text("Statement From : 01/04/2024       To : 31/03/2025", 30, currentY);
+                currentY += 15;
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(10);
+                pdf.text("Statement Period: 01/04/2024 to 31/03/2025", 30, currentY);
 
 
                 // 👉 Right Block (with aligned colons)
@@ -294,9 +305,14 @@ function download_pdf(response) {
                 const rightValueX = rightColonX + 5;
 
                 function printRightRow(label, value, y) {
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setFontSize(8);
                     pdf.text(label, rightLabelX, y);
                     pdf.text(":", rightColonX, y);
-                    if (value) pdf.text(value, rightValueX, y);
+                    if (value) {
+                        pdf.setFont("helvetica", "normal");
+                        pdf.text(String(value), rightValueX, y);
+                    }
                 }
 
                 // Draw top and bottom borders for each page (adjust as necessary)
@@ -361,40 +377,37 @@ function download_pdf(response) {
                 printRightRow("Account Type", response.account_info.account_type || "", headerRightY); // ✅ keep original case
 
 
-                // ✅ FOOTER SECTION (unchanged)
-                const leftMargin = 25;
+                // Footer section with improved styling
+                const leftMargin = 20;
                 let footerY = pageHeight - 60;
 
-                pdf.setFont("times", "bold");
-                pdf.setFontSize(9.5);
-                pdf.setTextColor(0, 0, 255);
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(10);
+                pdf.setTextColor(0, 102, 204);
                 pdf.text("HDFC BANK LIMITED", leftMargin, footerY);
 
-                footerY += 9;
-                pdf.setFont("times", "normal");
-                pdf.setFontSize(7.5);
-                pdf.setTextColor(0, 0, 255);
+                footerY += 10;
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(7);
+                pdf.setTextColor(0, 102, 204);
                 pdf.text("*Closing balance includes funds earmarked for hold and uncleared funds", leftMargin, footerY);
 
-                footerY += 9;
+                footerY += 10;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(7.5);
-                pdf.text(
-                    "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement. The address on this statement is that on record with the Bank as at the day of requesting this statement.",
-                    leftMargin,
-                    footerY,
-                    { maxWidth: pageWidth - 60 }
-                );
+                pdf.setFontSize(7);
+                const disclaimerText = "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement. The address on this statement is that on record with the Bank as at the day of requesting this statement.";
+                const splitText = pdf.splitTextToSize(disclaimerText, pageWidth - 40);
+                pdf.text(splitText, leftMargin, footerY);
 
-                footerY += 18;
-                pdf.setFont("times", "bold");
-                pdf.setFontSize(7.5);
+                footerY += 15;
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(7);
                 pdf.text("State account branch GSTIN: 33AAACH2702H1Z7", leftMargin, footerY);
 
-                footerY += 9;
-                pdf.setFont("times", "normal");
+                footerY += 8;
+                pdf.setFont("helvetica", "normal");
                 pdf.setTextColor(0, 0, 0);
-                pdf.text("HDFC Bank GSTIN number details are available at", leftMargin, footerY);
+                pdf.text("HDFC Bank GSTIN details are available at", leftMargin, footerY);
 
                 pdf.setTextColor(0, 0, 255);
                 const linkText = "HDFC GST Portal";
@@ -410,15 +423,12 @@ function download_pdf(response) {
                 pdf.setLineWidth(0.2);
                 pdf.line(linkX, linkY + 1, linkX + linkWidth, linkY + 1);
 
-                footerY += 9;
+                footerY += 8;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(7.5);
-                pdf.text(
-                    "Registered Office Address: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013",
-                    leftMargin,
-                    footerY,
-                    { maxWidth: pageWidth - 60 }
-                );
+                pdf.setFontSize(7);
+                const addressText = "Registered Office Address: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013";
+                const splitAddress = pdf.splitTextToSize(addressText, pageWidth - 40);
+                pdf.text(splitAddress, leftMargin, footerY);
             }
         })
         .save();
