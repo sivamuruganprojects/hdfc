@@ -157,9 +157,9 @@ function download_pdf(response) {
     const element = document.getElementById('pdf-content');
 
     const opt = {
-        margin: [20, 15, 25, 15], // top, left, bottom, right - increased margins for better layout
+        margin: [15, 10, 20, 10], // top, left, bottom, right - optimized for table content
         filename: 'hdfc_statement.pdf',
-        image: { type: 'jpeg', quality: 0.98 }, // improved quality
+        image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
             scale: 2,
             useCORS: true,
@@ -176,9 +176,9 @@ function download_pdf(response) {
             orientation: 'portrait'
         },
         pagebreak: {
-            mode: ['avoid-all', 'css', 'legacy'],
-            before: '.statement-table',
-            after: '.pdf-footer'
+            mode: ['css', 'legacy'],
+            before: '.pdf-footer',
+            avoid: '.statement-table thead'
         }
     };
 
@@ -197,135 +197,71 @@ function download_pdf(response) {
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
 
-                // Skip header/footer modifications for first page as it's already rendered by HTML
+                // Only add minimal header for pages 2+
                 if (i === 1) {
                     continue;
                 }
 
-
-                  // ✅ Draw a box border on each page
-    // const boxMarginLeft = 20;  // left margin
-    // const boxMarginTop = 227;  // start after header (same as your topBorderY)
-    // const boxWidth = pageWidth - 40; // leave 20px margin on each side
-    // const boxHeight = pageHeight - 307; // page height minus header & footer areas
-
-    // pdf.setDrawColor(102, 102, 102);  // grey border
-    // pdf.setLineWidth(0.75);
-    // pdf.rect(boxMarginLeft, boxMarginTop, boxWidth, boxHeight);
-                // Add consistent header styling for pages 2+
+                // Simple header for continuation pages
                 try {
-                    pdf.addImage(headerLogo, "PNG", 20, 15, 120, 15);
+                    pdf.addImage(headerLogo, "PNG", 10, 10, 100, 12);
                 } catch (e) {
                     console.warn("Header logo failed to load:", e);
                 }
 
-                // Page number and header text styling for pages 2+
+                // Page number
                 pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(9);
+                pdf.setFontSize(8);
                 pdf.setTextColor(0, 0, 0);
                 const pageText = `Page ${i} of ${totalPages}`;
                 const textWidth = pdf.getTextWidth(pageText);
-                pdf.text(pageText, (pageWidth - textWidth) / 2, 35);
+                pdf.text(pageText, (pageWidth - textWidth) / 2, 25);
 
+                // Statement title on right
                 pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(10);
+                pdf.setFontSize(9);
                 const headerText = "Account Statement";
                 const headerWidth = pdf.getTextWidth(headerText);
-                pdf.text(headerText, pageWidth - headerWidth - 20, 25);
+                pdf.text(headerText, pageWidth - headerWidth - 10, 20);
 
-                // Add a separator line below header for pages 2+
-                pdf.setDrawColor(0, 0, 0);
-                pdf.setLineWidth(0.5);
-                pdf.line(20, 40, pageWidth - 20, 40);
-
-                /* --- Skip customer details block for pages 2+ --- */
-                // Customer details are only shown on first page
-                let headerY = 55 + 40;
-                let headerRightY = 60;
-
-                // Skip all customer detail rendering for pages 2+
-
-                // Skip customer details for pages 2+ - these are only on first page
+                // Content area for continuation pages - let the table flow naturally
 
 
-                // Skip account info details for pages 2+ - these are only on first page
-
-                // Add table borders for pages 2+ to maintain consistency
-                const topBorderY = 50;  // Start after header
-                const bottomBorderY = pageHeight - 80; // Before footer
-
-                pdf.setDrawColor(102, 102, 102);
-                pdf.setLineWidth(0.78);
-
-                // Draw table continuation border
-                pdf.line(20, topBorderY, pageWidth - 20, topBorderY);
-                pdf.line(20, bottomBorderY, pageWidth - 20, bottomBorderY);
-
-
-                // if (i != 1 && i != totalPages) {
-                //     pdf.line(20.5, topBorderY, pageWidth - 30.5, topBorderY);
-                // }
-                // if (i != totalPages && i != totalPages - 1) {
-                //     pdf.line(20.5, bottomBorderY, pageWidth - 30.5, bottomBorderY);
-
-                //     // ✅ Extend vertical lines till background ends
-                // const columnsX = [20.7, 61.69, 298.9, 387.3,429.3,494,543.8, pageWidth - 30.6];
-                // columnsX.forEach(x => {
-                //     pdf.line(x, topBorderY+20, x, bottomBorderY);
-                // });
-                // }
-                
-
-
-
-
-
-
-                // Skip account details for pages 2+
-
-
-                // Footer section with improved styling for pages 2+
-                const leftMargin = 20;
-                let footerY = pageHeight - 50;
-
-                // Add separator line above footer
-                pdf.setDrawColor(0, 0, 0);
-                pdf.setLineWidth(0.5);
-                pdf.line(20, footerY - 10, pageWidth - 20, footerY - 10);
+                // Simple footer for continuation pages
+                const leftMargin = 10;
+                let footerY = pageHeight - 40;
 
                 pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(10);
+                pdf.setFontSize(8);
                 pdf.setTextColor(0, 102, 204);
                 pdf.text("HDFC BANK LIMITED", leftMargin, footerY);
 
-                footerY += 8;
+                footerY += 5;
                 pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(6);
+                pdf.setFontSize(5);
                 pdf.setTextColor(0, 102, 204);
                 pdf.text("*Closing balance includes funds earmarked for hold and uncleared funds", leftMargin, footerY);
 
-                footerY += 8;
+                footerY += 4;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(6);
+                pdf.setFontSize(5);
                 const disclaimerText = "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement.";
-                const splitText = pdf.splitTextToSize(disclaimerText, pageWidth - 40);
+                const splitText = pdf.splitTextToSize(disclaimerText, pageWidth - 20);
                 pdf.text(splitText, leftMargin, footerY);
 
-                footerY += 12;
+                footerY += 8;
                 pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(6);
+                pdf.setFontSize(5);
                 pdf.text("State account branch GSTIN: 33AAACH2702H1Z7", leftMargin, footerY);
 
-                footerY += 6;
+                footerY += 3;
                 pdf.setFont("helvetica", "normal");
-                pdf.setTextColor(0, 0, 0);
                 pdf.text("HDFC Bank GSTIN details available at HDFC GST Portal", leftMargin, footerY);
 
-                footerY += 6;
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(6);
+                footerY += 3;
+                pdf.setFontSize(5);
                 const addressText = "Registered Office: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013";
-                const splitAddress = pdf.splitTextToSize(addressText, pageWidth - 40);
+                const splitAddress = pdf.splitTextToSize(addressText, pageWidth - 20);
                 pdf.text(splitAddress, leftMargin, footerY);
             }
         })

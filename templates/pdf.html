@@ -13,11 +13,11 @@
         }
 
         @page:first {
-            margin: 15mm 10mm;
+            margin: 15mm 10mm 20mm 10mm;
         }
 
         @page:not(:first) {
-            margin: 20mm 10mm 25mm 10mm;
+            margin: 15mm 10mm 20mm 10mm;
         }
 
         * {
@@ -102,10 +102,22 @@
             page-break-inside: avoid;
         }
 
+        .statement-table thead {
+            display: table-header-group;
+        }
+
+        .statement-table tbody {
+            display: table-row-group;
+        }
+
         .statement-table td {
             border: 1px solid #666;
             padding: 4px;
             text-align: left;
+            page-break-inside: avoid;
+        }
+
+        .statement-table tr {
             page-break-inside: avoid;
         }
 
