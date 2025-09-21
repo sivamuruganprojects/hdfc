@@ -124,13 +124,13 @@ function getpdf_data() {
                     // ========== Append to pdf_statement ==========
                     const pdfRow = document.createElement('tr');
                     pdfRow.innerHTML = `
-                        <td>${txn.txn_date}</td>
-                        <td>${txn.narration}</td>
-                        <td>${txn.ref_no}</td>
-                        <td>${txn.value_date}</td>
-                        <td>${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
-                        <td>${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
-                        <td>${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
+                        <td style="text-align: left;">${txn.txn_date}</td>
+                        <td style="text-align: left; word-wrap: break-word;">${txn.narration}</td>
+                        <td style="text-align: center;">${txn.ref_no}</td>
+                        <td style="text-align: center;">${txn.value_date}</td>
+                        <td class="amount-col">${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
+                        <td class="amount-col">${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
+                        <td class="amount-col">${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
                     `;
                     pdfTbody.appendChild(pdfRow);
                 });
@@ -161,24 +161,28 @@ function download_pdf(response) {
         filename: 'hdfc_statement.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 2,
+            scale: 2.5,
             useCORS: true,
             scrollX: 0,
             scrollY: 0,
             width: element.scrollWidth,
             height: element.scrollHeight,
             allowTaint: false,
-            foreignObjectRendering: false
+            foreignObjectRendering: false,
+            letterRendering: true,
+            logging: false,
+            backgroundColor: '#ffffff'
         },
         jsPDF: {
             unit: 'mm',
             format: 'a4',
-            orientation: 'portrait'
+            orientation: 'portrait',
+            compress: true
         },
         pagebreak: {
             mode: ['css', 'legacy'],
             before: '.pdf-footer',
-            avoid: '.statement-table thead'
+            avoid: ['.statement-table thead', '.statement-table tr']
         }
     };
 
