@@ -1,0 +1,293 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Asul:wght@700&family=Open+Sans&display=swap');
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+@page{
+size:A4;
+margin: 200px 2cm 3cm 2cm; 
+
+ @top-center {
+    content: element(MyHeader); /* \A adds line break */
+  }
+@bottom-left{
+	content:element(MyFooter);
+}
+}
+
+header {
+  position: running(MyHeader); /* Makes the header reusable on all pages */
+  text-align: left;
+  height: 200px; /* Optional: matches top margin */
+  margin: 0; /* Don't add top margin here */
+}
+
+
+footer {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  height: 100px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 12px;
+}
+header p i:first-of-type{
+	margin-left:0;
+}
+
+header i{
+	margin-left:5mm;
+}
+footer p i:first-of-type{
+	margin-left:0;
+}
+
+footer i{
+	margin-left:5mm;
+}
+
+
+
+
+
+h1, h2, h3{
+	font-family: 'Asul', sans-serif;
+}
+
+h2{
+	background-color:black;
+	color:white;
+	display:inline-block;
+	padding:1mm;
+	text-transform:uppercase;
+}
+
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+
+.flex{
+	display:flex;
+}
+
+.left{
+	min-width:4cm;
+}
+
+section {
+  
+  margin-top: 160px;
+}
+
+.right p:first-of-type,
+.right h3:first-of-type{
+	margin-top:0;
+}
+
+.right p:first-of-type{
+	margin-bottom:0;
+}
+
+ .statement-table {
+            background-color: #d5f3f1;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .statement-table {
+            border-collapse: collapse;
+            /* Ensures no double borders */
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .statement-table th,
+        .statement-table td {
+            background-color: #d5f3f1;
+            border: 0.5px solid #000;
+            /* Thin black line for all borders */
+            padding: 2px 4px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+	<header id="header" style="position: running(MyHeader);">
+		<div class="pdf-header">
+			<br>
+			<img src="data:image/png;base64,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"
+                style="width: 150px;">
+			<br><br>
+			<table class="header-table" width="100%">
+				<tr>
+					<!-- Left Side Table -->
+					<td style="vertical-align: top; width: 50%;">
+						<div
+							style="border: 1px solid #000; padding: 10px; display: inline-block; width: 100%; min-height: 200px;">
+							<div id="user_full_name" style="font-weight: bold;">111111</div>
+							<div id="user_address_line1">22222222</div>
+							<div id="user_address_line2">33333333</div>
+							<div id="user_city_pincode">444444444444444</div>
+							<div id="user_state_country">55555555555</div>
+							<div id="user_joint_holders" style="margin-top: 10px;">777777777</div>
+						</div>
+						<br>
+						<div id="nominee" style="margin-top: 5px;"></div>
+					</td>
+
+					<!-- Right Side Table -->
+					<td style="vertical-align: top; width: 50%; padding-left: 30px;">
+						<table style="font-size: 10px; font-family: 'Times New Roman', Times, serif;">
+							<tr>
+								<td><strong>Account Branch</strong></td>
+								<td>: <span id="account_branch"></span>111111</td>
+							</tr>
+							<tr>
+								<td><strong>Address</strong></td>
+								<td>: <span id="branch_address"></span>22222</td>
+							</tr>
+							<tr>
+								<td><strong>City</strong></td>
+								<td>: <span id="branch_city"></span>3333333</td>
+							</tr>
+							<tr>
+								<td><strong>State</strong></td>
+								<td>: <span id="branch_state"></span>4444444444</td>
+							</tr>
+							<tr>
+								<td><strong>Phone no.</strong></td>
+								<td>: <span id="branch_phone"></span>55555555</td>
+							</tr>
+							<tr>
+								<td><strong>OD Limit</strong></td>
+								<td>: <span id="od_limit"></span>66666666</td>
+							</tr>
+							<tr>
+								<td><strong>Currency</strong></td>
+								<td>: <span id="currency"></span>77777777</td>
+							</tr>
+							<tr>
+								<td><strong>Email</strong></td>
+								<td>: <span id="email"></span>88888888</td>
+							</tr>
+							<tr>
+								<td><strong>Cust ID</strong></td>
+								<td>: <span id="cust_id"></span>99999999</td>
+							</tr>
+							<tr>
+								<td><strong>Account No</strong></td>
+								<td>: <span id="account_no"></span>000000000</td>
+							</tr>
+							<tr>
+								<td><strong>A/C Open Date</strong></td>
+								<td>: <span id="ac_open_date"></span>111111111</td>
+							</tr>
+							<tr>
+								<td><strong>Account Status</strong></td>
+								<td>: <span id="ac_status"></span>22222222</td>
+							</tr>
+							<tr>
+								<td><strong>RTGS/NEFT IFSC</strong></td>
+								<td>: <span id="ifsc_micr"></span>33333333</td>
+							</tr>
+							<tr>
+								<td><strong>Branch Code</strong></td>
+								<td>: <span id="branch_code"></span>444444444</td>
+							</tr>
+							<tr>
+								<td><strong>Account Type</strong></td>
+								<td>: <span id="account_type"></span>55555555</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<br>
+
+			<div style="margin-top: 10px; display: flex; align-items: center; gap: 15px; font-size: 12px;"
+				class="info-block">
+				<span id="date-range-display">From:
+                    --/--/----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To:
+                    --/--/----</span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<span style="font-size: 16px; font-weight: bold;">Statement of Account</span>
+			</div>
+		</div>
+	</header>
+	<footer>
+		<div class="pdf-footer"
+			style="font-size: 10px; color: black; text-align: left; line-height: 1.4; background-color: white; padding: 5px;">
+			<strong style="color: blue;">HDFC BANK LIMITED</strong><br>
+			<span style="color: blue;">*Closing balance includes funds earmarked for hold and uncleared
+                        funds</span><br>
+                    Contents of this statement will be considered correct if no error is reported within 30 days of
+                    receipt of statement. The address on this statement is that on record with the Bank as at the day of
+                    requesting this statement.<br>
+			<strong>State account branch GSTIN: 33AAACH2702H1Z7</strong><br>
+                    HDFC Bank GSTIN number details are available at
+			<a href="https://www.hdfcbank.com/personal/making-payments/online-tax-payment/goods-and-service-tax"
+				target="_blank" style="color: blue;">
+				HDFC GST Portal
+			</a><br>
+                    Registered Office Address: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013
+			<br>
+
+		</div>
+	</footer>
+
+
+		<section>
+			<div class="print-wrapper">
+				<table style="width: 100%;" class="statement-table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Narration</th>
+							<th>Chq./Ref. No.</th>
+							<th>Value Dt</th>
+							<th>Withdrawal Amt.</th>
+							<th>Deposit Amt.</th>
+							<th>Closing Balance</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="account_statements">
+							<td width="11%">05 Jul 2025</td>
+							<td width="25%">IMPS-518619097023-SIVAMURUGAN B-ICIC-xxxxxxxx3479-Mobile due
+							</td>
+							<td width="18%">518619097023</td>
+							<td width="10%">05 Jul 2025</td>
+							<td width="10%"></td>
+							<td width="10%" class="aligngight">3,000.00</td>
+							<td width="10%" class="aligngight">3,022.12</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+
+	
+</body>
+
+
+</html>

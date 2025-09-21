@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HDFC NetBanking</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+   <link rel="stylesheet" href="{% static 'css/base.css' %}">
+   <script src="{% static 'js/pdf.js' %}"></script>
+   <script src="{% static 'js/report.js' %}"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Top Blue Bar -->
+        <div class="top-blue-bar p-1 text-end">
+            <a href="#">Sensitivity</a>
+            <a href="#">Personalize</a>
+            <a href="#">User ID</a>
+            <a href="#">Insta Alerts</a>
+            <a href="#">SMS Banking Registration</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <!-- Bank Header -->
+        <table width="100%" cellspacing="0" cellpadding="0">
+            <tr style="background-color: #8ec4f3;">
+                <td>
+                    <div style="display: flex;">
+                        <div style="width: 227px;">
+                            <img src="{% static 'images/hdfclogo.gif' %}" alt="HDFC Bank" class="logo_img" />
+                        </div>
+                        <div style="flex-grow: 1; padding: 10px 10px 0px 0px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 11px; color: #004a8f;"><b>WELCOME, <b
+                                                id="username">Selvakumar</b></b></span>
+                                    <span style="font-size: 9px; color: #004a8f;">Last Log in: Jul 05 2025 3:53 P.M.
+                                        IST</span>
+                                </div>
+                                <div>
+                                    <a href="#"
+                                        style="font-size: 12px; color: #004a8f; margin-right: 12px; text-decoration: none;">Change
+                                        Password</a>
+                                    <a href="#"
+                                        style="font-size: 12px; color: #004a8f; margin-right: 12px; text-decoration: none;">Profile
+                                        Details</a>
+                                    <a href="http://localhost:8000"
+                                        style="text-decoration: none; background-color: #004a8f; color: white; padding: 6px 12px; font-size: 11px; border-radius: 6px;">
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; display: flex; gap: 2px;">
+                                <!-- <img src="templates/images/account.gif" alt="account" /> -->
+                                <img src="{% static 'images/account.gif' %}" alt="account" />
+                                <img src="{% static 'images/fund.gif' %}" alt="account" />
+                                <img src="{% static 'images/billpay.gif' %}" alt="account" />
+                                <img src="{% static 'images/cards.gif' %}" alt="account" />
+                                <img src="{% static 'images/demat.gif' %}" alt="account" />
+                                <img src="{% static 'images/mutual_fund.gif' %}" alt="account" />
+                                <img src="{% static 'images/insurance.gif' %}" alt="account" />
+                                <img src="{% static 'images/loan.gif' %}" alt="account" />
+                                <img src="{% static 'images/offer.gif' %}" alt="account" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Main Content -->
+        <div class="container mt-3 main-container">
+            <div class="row" style="width: 100%; display: flex;flex-direction: column;">
+                <!-- Left Menu -->
+                <div class="col-md-3 left-menu">
+                    <div class="menu-item active" style="background-color: #074e9d; font-size: 16px; color: #fff;">
+                        Accounts
+                    </div>
+                    <!-- <div class="accord-menulist" onclick="proceedTodashboard()">Account Summary</div> -->
+                    <div id="account-summary" class="accord-menulist" onclick="proceedTodashboard()">Account Summary
+                    </div>
+
+                    <div class="accord-menu">Transact <i class="arrow_icon"></i></div>
+                    <div class="accord-menu">Enquire <i class="arrow_icon"></i></div>
+                    <div class="accord-menu">Request <i class="arrow_icon"></i></div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="col-md-9 main-content" style="margin-left: 203px;width: auto;">
+                    <!-- Session Expired Message -->
+                    <div id="top"></div>
+                    <div style="max-height: min(470px, 80vh); overflow-y: auto; width: 1115px;">
+                        <div class="accountdetails" id="accountdetails">
+                            <div class="topHeader">
+                                <h1 class="pull-left"
+                                    style="font-size: 21px; color: #333333; width: 100%;margin-bottom: 0px !important;">
+                                    Account Summary</h1>
+                                <p style="display: flex;" class="print" onclick="printPage()">
+                                    <img alt="Print This Page" style="float: right;"
+                                        src="{% static 'images/print.gif' %}">
+                                    <a style="font-size: 13px; width: 100px;" href="#">Print This Page</a>
+                                </p>
+                            </div>
+                            <img src="{% static 'images/banner.jpg' %}" alt="banner" class="banner">
+                            <div onclick="return toggleSavingAcctListDiv()">
+                                <div colspan="5" class="PSMSubHeader"><span style="float:left;"
+                                        class="tableHeaderPSM">Savings Account</span><span style="float:right;"
+                                        class="tableHeaderPSM"><a style="text-decoration:none;">
+                                            &nbsp;&nbsp;&nbsp;<img border="0" src="{% static 'images/arrowIcon.png' %}"
+                                                id="savingAcctList"></a></span><span id="SavingTotalSummary"
+                                        style="float:right;" class="tableHeaderPSM">Total Available Balance: INR
+                                        {{ closing_balance|floatformat:2 }}</span></div>
+                            </div>
+
+                            <!-- Toggled Row -->
+                            <table class="accountbalance" style="display: none; width: 100%;" id="savingAcctDetails"
+                                cellpadding="8">
+                                <tr
+                                    style="color: #666; font-size: 14px;border-left: 1px solid #ced2df; border-right: 1px solid #ced2df;border-bottom: 1px solid #ced2df;">
+                                    <td width="20%">
+                                        <span class="headingLable">Account No.</span><br>
+                                        <a href="#"
+                                            style="color: #004a8f !important; text-decoration: none;">{{account_info.account_no}}</a>
+                                    </td>
+                                    <td width="22%">
+                                        <span class="headingLable">Branch</span><br>
+                                        <a href="#"
+                                            style="color: #333 !important; text-decoration: none;">{{branch_details.branch_name}}</a>
+                                    </td>
+                                    <td width="28%">
+                                        <span class="headingLable">Name</span><br>
+                                        <a id="userName" href="#"
+                                            style="color: #333 !important; text-decoration: none;">test</a>
+                                    </td>
+                                    <td width="20%">
+                                        <span class="headingLable">Available Balance</span><br>
+                                        <a href="#"
+                                            style="color: #004a8f !important;font-size: 18px !important; text-decoration: none;">INR
+                                            {{ closing_balance|floatformat:2 }}</a>
+                                    </td>
+                                    <td width="10%">
+                                        <span id="view_button" onclick="showTransactions()">View</span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+                            <table class="imp">
+                                <tbody>
+                                    <tr>
+                                        <td width="1%"><strong class="noteTxt">Note:</strong></td>
+                                        <td> &nbsp;<br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" valign="top" style="text-align: center;">
+                                            <img src="{% static 'images/bulletIcon.png' %}">
+                                            <img src="{% static 'images/bulletIcon.png' %}" alt="bulletIcon" />
+                                        </td>
+                                        <td>
+                                            The Available Balance displayed includes the credit balance and overdraft
+                                            limit
+                                            (if any) in your account.
+                                            <br>
+                                            &nbsp;&nbsp;&nbsp;(i) It does not include Uncleared Funds.
+                                            <br>
+                                            &nbsp;&nbsp;&nbsp;(ii) It includes amount marked for hold.
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"> <img
+                                                src="{% static 'images/bulletIcon.png' %}" alt="bulletIcon" />
+                                        </td>
+                                        <td>
+                                            The Hold Balance may also include pending service charges due to be
+                                            recovered
+                                            from your account.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"> <img
+                                                src="{% static 'images/bulletIcon.png' %}" alt="bulletIcon" />
+                                        </td>
+                                        <td>
+                                            Savings account customers can now receive their statements monthly, by
+                                            email,
+                                            for free. To register - <a href="#">Click
+                                                here!!</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"> <img
+                                                src="{% static 'images/bulletIcon.png' %}" alt="bulletIcon" />
+                                        </td>
+                                        <td>
+                                            What's New ! Now recharge your Prepaid Mobile and DTH connections through
+                                            BillPay &amp; Recharge! <a href="#">
+                                                Click here</a> to know more.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"> <img
+                                                src="{% static 'images/bulletIcon.png' %}" alt="bulletIcon" />
+                                        </td>
+                                        <td>
+                                            Please <a href="#">click here</a> to check your PAN Card details.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="transactionTable" class="accountdetails" style="display: none;">
+                            <div class="topHeader">
+                                <h1 class="pull-left"
+                                    style="font-size: 21px; color: #333333; width: 100%;margin-bottom: 0px !important;">
+                                    View / Download Account Statement</h1>
+                                <p style="display: flex;" class="print" onclick="printPage()">
+                                    <img alt="Print This Page" style="float: right;"
+                                        src="{% static 'images/print.gif' %}">
+                                    <a style="font-size: 13px; width: 100px;" href="#">Print This Page</a>
+                                </p>
+                            </div>
+                            <p class="selecttable">Savings Account No.: <b>{{account_info.account_no}} ,
+                                    {{branch_details.branch_name}}</b></p>
+                            <div style="display: flex; justify-content: space-between;align-items: center;">
+                                <div class="DataLeftAligned" style="color: #104887 !important; padding: 4px;">[ <a
+                                        href="#" onclick="showhistory()">Select Another Account / Period </a> ] </div>
+                                <div class="DataLeftAligned" style="color: #666666 !important;"><span> Page 1 of
+                                        1</span></div>
+                            </div>
+                            <div
+                                style="width: 100%; align-items: end; text-align: right;font-size: 15px;padding: 4px; color: #104887 !important">
+                                Closing Balance: <b>{{closing_balance|floatformat:2}}</b></div>
+                            <table id="account_statements">
+                                <tr class="account_statements">
+
+                                    <th width="11%">Date</th>
+                                    <th width="25%">Narration</th>
+                                    <th width="18%">Cheque/Ref. No. </th>
+                                    <th width="10%">Value Date</th>
+                                    <th width="10%">Withdrawal</th>
+                                    <th width="10%">Deposit</th>
+                                    <th width="10%">Closing Balance</th>
+                                </tr>
+                                {% for txn in results %}
+                                <tr class="account_statements">
+                                    <td>{{ txn.txn_date }}</td>
+                                    <td>{{ txn.narration }}</td>
+                                    <td>{{ txn.ref_no }}</td>
+                                    <td>{{ txn.value_date }}</td>
+                                    <td>{{ txn.withdrawal_amt|floatformat:2 }}</td>
+                                    <td>{{ txn.deposit_amt|floatformat:2 }}</td>
+                                    <td>{{ txn.running_balance|floatformat:2 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7">No transactions found.</td>
+                                </tr>
+                                {% endfor %}
+
+
+                            </table>
+                            <!-- <a href="#top" class="printlink">Return to top</a> -->
+                            <a href="#top" class="printlink" id="returnToTop">Return to top</a>
+                        </div>
+                        <div id="historytable" class="accountdetails" style="display: none;">
+                            <div class="topHeader">
+                                <h1 class="pull-left"
+                                    style="font-size: 21px; color: #333333; width: 100%;margin-bottom: 0px !important;">
+                                    A/c Statement - Current & Previous Month</h1>
+                            </div>
+                            <table class="formtable" style="width: 100%;" id="account_statements">
+                                <tbody>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Account Type:</td>
+                                        <td width="80%" class="DataLeftAligned">
+                                            <div class="custom-dropdown">
+                                                <select id="accountselect1" name="selAcct" class="select">
+                                                    <option selected="">- Select Type of Account -</option>
+                                                    <option value="SCA">Saving And Current Accounts</option>
+                                                </select>
+                                                <div class="dropdown-icon">
+                                                    <img src="{% static 'images/dropdown.png' %}" alt="dropdown"
+                                                        onclick="triggerSelect()">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="first" class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Account Number:</td>
+                                        <td width="80%" class="DataLeftAligned">
+                                            <div class="custom-dropdown">
+                                                <select id="accountno" name="selAcct" class="select">
+                                                    <option selected="">- Select An Account -</option>
+                                                    <option value="account1">{{account_info.account_no}}</option>
+                                                </select>
+                                                <div class="dropdown-icon">
+                                                    <img src="{% static 'images/dropdown.png' %}" alt="">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="minisatementshowhide">
+                                        <td width="20%" colspan="2" class="DataLeftAligned"><span
+                                                class="radio"></span><input value="C" name="radTxnType" checked="true"
+                                                type="radio" value="0" id="mini_statement" class="radioElement">
+                                            <input type="hidden" id="mini_value">
+                                            Mini Statement
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned"><span class="radio"></span><input
+                                                value="C" id="datepick" name="radTxnType" type="radio"
+                                                class="radioElement">
+                                            Select Period
+                                        </td>
+                                        <td class="smallSelectAuto" width="80%">
+
+                                            <div id="casaCal" class="floatL marRight5">
+                                                <span class="casCal">From:&nbsp;</span>
+                                                <input autocomplete="off" disabled id="frmDatePicker" type="text">
+                                                <img id="dateTrigger" src="{% static 'images/date.png' %}" alt="date"
+                                                    style="cursor: pointer;">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned">
+
+                                            &nbsp;
+                                        </td>
+                                        <td class="smallSelectAuto" width="80%">
+                                            <div id="casaCal" class="floatL marRight5">
+                                                <span class="casCal">To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <input autocomplete="off" disabled id="toDatePicker" type="text">
+                                                <img id="datetoTrigger" src="{% static 'images/date.png' %}" alt="date"
+                                                    style="cursor: pointer;">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Show Transactions:</td>
+                                        <td class="smallSelectAuto" width="80%">
+                                            <div class="clsTransact">
+                                                <span class="select" id="selectcmbTxnType2">
+                                                    All Transactions <img class="drp"
+                                                        src="{% static 'images/dropdown.png' %}" alt="dropdown"> </span>
+                                                Per Page 20 <img class="drp" src="{% static 'images/dropdown.png' %}"
+                                                    alt="dropdown"> Transactions
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata" style="border: none;">
+                                        <td width="20%" class="report_view" colspan="2" style="cursor: pointer;"
+                                            onclick="fetchReport()">View</td>
+                                    </tr>
+
+                                    <table id="fetch_report" style="display: none;">
+                                        <tr class="account_statements">
+
+                                            <th width="11%" style="border-left: 1px solid #ced2df !important;">Date</th>
+                                            <th width="25%">Narration</th>
+                                            <th width="18%">Cheque/Ref. No. </th>
+                                            <th width="10%">Value Date</th>
+                                            <th width="10%">Withdrawal</th>
+                                            <th width="10%">Deposit</th>
+                                            <th width="10%">Closing Balance</th>
+                                        </tr>
+                                    </table>
+
+                                </tbody>
+                            </table>
+                            <table class="imp">
+                                <tbody>
+                                    <tr>
+                                        <td width="1%"><strong class="noteTxt">Note:</strong></td>
+                                        <td> &nbsp;<br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" valign="top" style="text-align: center;">
+                                            <img src="{% static 'images/bulletIcon.png' %}">
+
+                                        </td>
+                                        <td>Transactions for the current and previous month only can be viewed /
+                                            downloaded through this option.eg: You can view/download statement from
+                                            01/06/2025 upto 13/07/2025.
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>
+                                            To download statements prior to last month, kindly use the 'A/C statement -
+                                            Upto 5 Years' option or
+                                            <a href="#" onclick="pdfgenerate()">Click here</a>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td> For an account statement less than or equal to 6 months, you can download a
+                                            maximum of 2000 transactions at a time. If the transactions are more than
+                                            that, you can download the statement in parts by adjusting the date range.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td> Please click on 'Select Period' option to save and download your Account
+                                            Statement.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>
+                                            Please <a href="#">click here</a> to check your PAN Card details.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pdfgenerate" class="accountdetails" style="display: none;">
+                            <div class="topHeader">
+                                <h1 class="pull-left"
+                                    style="font-size: 21px; color: #333333; width: 100%;margin-bottom: 0px !important;">
+                                    A/c Statement - Upto 5 Years</h1>
+                            </div>
+                            <table class="formtable" style="width: 100%;" id="account_statements">
+                                <tbody>
+
+                                    <tr id="first" class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Account Number:</td>
+                                        <td width="80%" class="DataLeftAligned">
+                                            <div class="custom-dropdown">
+                                                <select id="accountSelect" name="selAcct" class="select">
+                                                    <option selected="">- Select An Account -</option>
+                                                    <option value="account1">{{account_info.account_no}}</option>
+                                                </select>
+
+                                                <div class="dropdown-icon">
+                                                    <img src="{% static 'images/dropdown.png' %}" alt="">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Select Period:</td>
+                                        <td width="80%" class="DataLeftAligned">
+                                            <div class="custom-dropdown">
+                                                <select id="periodSelect" name="selPeriod" class="select">
+                                                    
+                                                </select>
+
+                                                <div class="dropdown-icon">
+                                                    <img src="{% static 'images/dropdown.png' %}" alt=""
+                                                        onclick="triggerSelect()">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata" id="specificRow1">
+                                        <td width="20%" class="DataLeftAligned"><span class="radio"></span>
+                                            Specific <br> Period:
+                                        </td>
+                                        <td class="smallSelectAuto" width="80%">
+
+                                            <div id="casaCal" class="floatL marRight5">
+                                                <span class="casCal">From:&nbsp;</span>
+                                                <input autocomplete="off" disabled id="frmDatePickerPDF" type="text">
+                                                <img id="dateTriggerPDF" src="{% static 'images/date.png' %}" alt="date"
+                                                    style="cursor: pointer;">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata" id="specificRow2">
+                                        <td width="20%" class="DataLeftAligned">
+
+                                            &nbsp;
+                                        </td>
+                                        <td class="smallSelectAuto" width="80%">
+                                            <div id="casaCal" class="floatL marRight5">
+                                                <span class="casCal">To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <input autocomplete="off" disabled id="toDatePickerPDF" type="text">
+                                                <img id="datetoTriggerPDF" src="{% static 'images/date.png' %}" alt="date"
+                                                    style="cursor: pointer;">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata">
+                                        <td width="20%" class="DataLeftAligned">Select Format:</td>
+                                        <td width="80%" class="DataLeftAligned">
+                                            <div class="custom-dropdown">
+                                                <select id="formatSelect" name="selFormat" class="select">
+                                                    <option value="no">Select Format</option>
+                                                    <option value="SCA">Text</option>
+                                                    <option value="SCA">Delimited</option>
+                                                    <option value="SCA">Excel</option>
+                                                    <option value="SCA">PDF</option>
+                                                </select>
+
+                                                <div class="dropdown-icon">
+                                                    <img src="{% static 'images/dropdown.png' %}" alt=""
+                                                        onclick="triggerSelect()">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="historydata" style="border: none;">
+                                        <td id="pdf" width="20%" class="report_view" colspan="2"
+                                            onclick="getpdf_data()">Download</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div
+                                style="font-size: 1.313em;color: #333333; font-weight: normal; margin-top: 15px; margin-right: 0px;margin-bottom: 20px;">
+                                View Requested Statements </div>
+                            <div style="FONT-WEIGHT: bold;FONT-SIZE: 0.8em; width: 598px;"> You do not have any
+                                previously requested statements from last 48 hours, kindly request for account statement
+                                using above options </div>
+                            <table class="imp">
+                                <tbody>
+                                    <tr>
+                                        <td width="1%"><strong class="noteTxt">Note:</strong></td>
+                                        <td> &nbsp;<br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" valign="top" style="text-align: center;">
+                                            <img src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>Account Statement is available from 26/07/2020.
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>
+                                            To get the statement beyond 5 years use option 'A/c Statement - Upto 10
+                                            Years' option or <a href="#">Click
+                                                here</a>.</td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>Difference between From and To date should not be more than 12 months.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>Statements downloaded through this option will not carry today's
+                                            (26-07-2025) transactions. In case you would like to download those too,
+                                            please use the <a href="#">A/c Statement - Current & Previous Month </a>
+                                            option.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>For an account statement less than or equal to 6 months, you can download a
+                                            maximum of 2000 transactions at a time. If the transactions are more than
+                                            that, you can download the statement in parts by adjusting the date range.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-align: center;"><img
+                                                src="{% static 'images/bulletIcon.png' %}">
+                                        </td>
+                                        <td>For an account statement of more than 6 months, you can download a maximum
+                                            of 10,000 transactions at a time.If the transactions are more than that, you
+                                            can download the statement in parts by adjusting the date range.</td>
+                                    </tr>
+                                    <td width="1%" style="text-align: center;"><img
+                                            src="{% static 'images/bulletIcon.png' %}">
+                                    </td>
+                                    <td>Statements once ready for download, will be available for re-download for next 2
+                                        days.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="note">
+                                <strong>
+                                    Go Paperless: Save Trees <a href="#">Click Here</a> to register for Free E mail
+                                    Statements
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="footer-container">
+                        <marquee style="width: 100%; font-size: 13px; font-weight: bold; color: red;width: 745px;"
+                            truespeed="truespeed" scrollamount="1" direction="left" scrolldelay="30">
+                            Linking PAN with Aadhaar is mandatory! To avoid the restrictions on certain banking
+                            transactions and
+                            high TDS/TCS, please link your PAN with Aadhar.
+                            <a href="#" style="color: #333399; text-decoration: underline;">Know More</a>.
+                        </marquee>
+                        <div style="font-size: 11.2px;">
+                            <a style="color: #666666;"> Copyright HDFC Bank Ltd.</a>
+                            <a href="#" style="color: #333399; text-decoration: underline;">Terms and Conditions</a> |
+                            <a href="#" style="color: #333399; text-decoration: underline;">Privacy Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div id="pdf-content" class="statement">
+
+
+
+        <div id="pdf_statement" class="pdf-content">
+            <table style="width: 100%;" class="statement-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Narration</th>
+                        <th>Chq./Ref. No.</th>
+                        <th>Value Dt</th>
+                        <th>Withdrawal Amt.</th>
+                        <th>Deposit Amt.</th>
+                        <th>Closing Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Your rows go here -->
+                </tbody>
+            </table>
+            <!-- STATEMENT SUMMARY section inside #pdf_statement -->
+            <div style="margin-top: 20px; padding: 10px; background-color: white;">
+                <table
+                    style="width: 100%; text-align: center; font-weight: bold; background-color: white; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th colspan="6" style="text-align: left; font-size: 10px; padding: 10px 0 10px 20px;">
+                                STATEMENT SUMMARY :-
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Opening Balance</td>
+                            <td>Dr Count</td>
+                            <td>Cr Count</td>
+                            <td>Debits</td>
+                            <td>Credits</td>
+                            <td>Closing Bal</td>
+                        </tr>
+                        <tr>
+                            <td id="opening_balance">{{opening_balance}}</td>
+                            <td id="withdrawal_count"></td>
+                            <td id="deposit_count"></td>
+                            <td id="no_of_withdrawal"></td>
+                            <td id="no_of_total_deposit"></td>
+                            <td>{{closing_balance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br><br><br><br><br><br>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 10px; padding: 0 10px; gap: 5px; font-size: 12px;">
+
+                    <span style="white-space: nowrap;">Generated On:<span id="generatedOn"
+                            style="margin-left: 4px;"></span></span>
+                    <span style="white-space: nowrap;">Generated By:<span id="generatedBy"
+                            style="margin-left: 4px;"></span></span>
+                    <span style="white-space: nowrap;">Requesting Branch Code:<span id="requestingBranch"
+                            style="margin-left: 4px;"></span></span>
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const miniRadio = document.getElementById("mini_statement");
+        const mini_value = document.getElementById("mini_value");
+        const datepickRadio = document.getElementById("datepick");
+        const fromDatePicker = document.getElementById("frmDatePicker");
+        const toDatePicker = document.getElementById("toDatePicker");
+
+        function toggleDatePickers() {
+            if (miniRadio.checked) {
+                fromDatePicker.disabled = true;
+                toDatePicker.disabled = true;
+                mini_value.value = miniRadio.checked ? "1" : "0";
+                console.log('8888888---', mini_value.value)
+
+            } else if (datepickRadio.checked) {
+                fromDatePicker.disabled = false;
+                toDatePicker.disabled = false;
+                mini_value.value = miniRadio.checked ? "1" : "0";
+                console.log('77777---', mini_value.value)
+            }
+        }
+
+        if (miniRadio) miniRadio.addEventListener("change", toggleDatePickers);
+        if (datepickRadio) datepickRadio.addEventListener("change", toggleDatePickers);
+
+        // Optionally run once on page load
+        toggleDatePickers();
+    });
+
+
+
+    function printPage() {
+        window.print(); // Triggers browser's print dialog (like Ctrl + P)
+    }
+
+
+    
+</script>
+
+
+
+
+<script>
+    let userData = JSON.parse(sessionStorage.getItem("userData"));
+    if (userData && userData.username) {
+        document.getElementById("username").textContent = userData.username;
+        document.getElementById("userName").textContent = userData.username;
+
+
+
+        document.getElementById("generatedOn").innerText = userData.username;
+
+        //document.getElementById("requestingBranch").innerText = branch.branch_code;
+    }
+    console.log('user data ------>>>>', userData);
+
+    function proceedTodashboard() {
+
+        let userID = $('#username').val();
+        console.log('username', userID)
+        window.location.href = `/dashboard/?userID=${encodeURIComponent(userData.userID)}`;
+    }
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[now.getMonth()];
+    const year = now.getFullYear();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const formatted = `${day}-${month}-${year} ${hours}:${minutes}`;
+    console.log('date formate--->', formatted);
+    document.getElementById("generatedBy").innerText = formatted;
+
+
+
+    function pdfgenerate() {
+        document.getElementById("accountdetails").style.display = "none";
+        document.getElementById("transactionTable").style.display = "none";
+        document.getElementById("historytable").style.display = "none";
+        document.getElementById("pdfgenerate").style.display = "block";
+    }
+
+
+    function toggleSavingAcctListDiv() {
+        const row = document.getElementById('savingAcctDetails');
+        const arrow = document.getElementById('savingAcctList');
+        const isVisible = row.style.display === 'table' || row.style.display === 'block' || row.style.display === 'table-row-group';
+
+        row.style.display = isVisible ? 'none' : 'table';
+        arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(90deg)';
+    }
+
+    function showTransactions() {
+        document.getElementById("accountdetails").style.display = "none";
+        document.getElementById("transactionTable").style.display = "block";
+    }
+    function showhistory() {
+        document.getElementById("accountdetails").style.display = "none";
+        document.getElementById("transactionTable").style.display = "none";
+        document.getElementById("historytable").style.display = "block";
+    }
+
+    // Return to top function
+    document.getElementById("returnToTop").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Find the scrollable container (the div with overflow-y: auto)
+        const scrollableDiv = document.querySelector('div[style*="overflow-y: auto"]');
+
+        // Smooth scroll to top
+        scrollableDiv.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+
+    
+
+
+
+
+</script>
+
+</html>

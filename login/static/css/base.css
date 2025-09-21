@@ -1,0 +1,545 @@
+
+        /* Normal screen display */
+        #pdf-content {
+            display: block;
+        }
+
+        /* Hide in print */
+        @media print {
+            #pdf-content {
+                display: none !important;
+            }
+        }
+
+
+
+
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            padding: 0 !important;
+            width: 990px;
+            overflow: hidden;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            margin: 0px !important;
+        }
+
+        .top-blue-bar {
+            background-color: #e2effa;
+            color: #004a8f;
+            font-size: 11px;
+        }
+
+        .top-blue-bar a {
+            margin-left: 5px;
+            text-decoration: none;
+        }
+
+        .bank-header {
+            background-color: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .left-menu {
+            background-color: white;
+            padding: 0;
+            width: 213px;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .menu-item {
+            padding: 5px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .accord-menu,
+        .accord-menulist {
+            padding: 19px 22px 19px 12px;
+            color: #333333;
+            font-size: 14px;
+            word-wrap: break-word;
+            float: left;
+            width: 100%;
+
+        }
+
+        #account-summary {
+            cursor: pointer;
+        }
+
+
+        .accord-menu {
+            border-top: 1px solid #0c427f;
+            background-color: #e2effa;
+            position: relative;
+        }
+
+        .main-content {
+            background-color: white;
+            padding: 15px 10px 0px 30px;
+        }
+
+        .account-section {
+            margin-bottom: 15px;
+        }
+
+        .account-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .account-balance {
+            font-weight: bold;
+            color: #0064b0;
+            font-size: 16px;
+        }
+
+        .note-box {
+            background-color: #fff8e1;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .note-highlight {
+            font-weight: bold;
+        }
+
+        .noteTxt {
+            font-size: 14px;
+            color: #04366e;
+        }
+
+        .logo_img {
+            margin-top: -30px;
+        }
+
+        .arrow_icon {
+            background: url(images/arrowIcon.png) no-repeat center center;
+            width: 11px;
+            height: 12px;
+            position: absolute;
+            top: 0;
+            right: 9px;
+            margin-top: 0;
+            display: block;
+            height: 100%;
+        }
+
+        .footer-container {
+            border-top: 1px solid #CCCCCC;
+            font-size: 12px;
+            width: 640px;
+            padding: 0px !important;
+            margin-left: 30px;
+            margin-top: 10px;
+            border-top: 1px solid #CCCCCC;
+            text-align: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-left {
+            color: #000;
+        }
+
+        .footer-links {
+            flex: 1;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #333399;
+            text-decoration: underline;
+            margin: 0 3px;
+        }
+
+        .footer-right {
+            white-space: nowrap;
+            color: red;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .pan-alert {
+            color: red;
+            font-weight: bold;
+        }
+
+        .accountdetails {
+            min-height: 67vh;
+            width: 745px;
+        }
+
+        .topHeader {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .PSMSubHeader {
+            background-color: #e2effa !important;
+            border-bottom: 1px solid #ced2df;
+            border-right: 1px solid #ced2df;
+            border-left: 1px solid #ced2df;
+            padding: 8.5px 8px;
+            display: flow-root;
+        }
+
+        a {
+            color: #004a8f;
+        }
+
+        .banner {
+            width: 630px;
+            margin-bottom: 30px;
+            margin-top: -10px;
+        }
+
+        .tableHeaderPSM {
+            color: #333333;
+        }
+
+        .imp {
+            margin-top: 28px;
+        }
+
+        .imp td {
+            color: #333;
+            font-size: 12px;
+            padding: 5px 0px;
+        }
+
+        #view_button {
+            color: #004a8f;
+            border: 1px solid #000;
+            padding: 6px 19px;
+            border-radius: 4px;
+            font-weight: 700;
+            background-color: #d9d9d9;
+        }
+
+        .selecttable {
+            color: #104887 !important;
+            font-size: 15px;
+            border-width: 1px;
+            border-color: #ced2df;
+            border-style: solid;
+            margin-top: 10px;
+            margin-right: 0px;
+            margin-bottom: 8px;
+            margin-left: 0px;
+            padding-top: 10px;
+            padding-right: 12px;
+            padding-bottom: 10px;
+            padding-left: 12px;
+        }
+
+        .DataLeftAligned {
+            font-size: 13px;
+        }
+
+        .account_statements th {
+            background: none repeat scroll 0 0 #e7edf3;
+            color: #666666;
+            font-weight: normal;
+            padding: 8px;
+            vertical-align: top;
+            text-align: left;
+            font-size: 12px;
+            border-bottom: 1px solid #ced2df;
+            border-right: 1px solid #ced2df;
+        }
+
+        #account_statements {
+            border: 1px solid #ced2df;
+            margin-top: 15px;
+        }
+
+        .account_statements td {
+            background-color: #FFFFFF;
+            color: #333333;
+            border-bottom: 1px solid #ced2df;
+            border-right: 1px solid #ced2df;
+            padding: 13px 8px 11px;
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        .aligngight {
+            text-align: right;
+        }
+
+        .printlink {
+            font-size: 13px;
+            color: #004a8f;
+        }
+
+        .historydata,
+        #minisatementshowhide {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ced2df;
+            display: flex;
+        }
+
+        .DataLeftAligned {
+            color: #666666;
+            font-size: 13px;
+        }
+
+        .select {
+            font-size: 12px;
+            color: #333333;
+            border: none;
+        }
+
+        .clsTransact,
+        .clsTransact .select {
+            font-size: 13px;
+            color: #333333;
+            border: none;
+        }
+
+        .select:focus {
+            outline: none;
+            box-shadow: none;
+            border: none;
+        }
+
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+            width: 250px;
+        }
+
+        .select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            transform: translateY(-50%);
+            pointer-events: none;
+            right: 0px;
+            top: 10px;
+        }
+
+        input[type="radio"] {
+            color: #004a8f;
+            margin-right: 15px;
+        }
+
+        input[type="text"] {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            height: 34px;
+            border-radius: 3px;
+        }
+
+        #hideradio {
+            display: flex;
+            align-items: center;
+        }
+
+        .report_view {
+            padding: 5px 22px;
+            background: #104887;
+            font-size: 14px;
+            color: #fff;
+            border-radius: 4px;
+            width: auto;
+        }
+
+        /* For IE */
+        select::-ms-expand {
+            display: none;
+        }
+
+        .casCal {
+            font-size: 12px;
+            color: #333333;
+        }
+
+        .ui-datepicker {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            padding: 0px !important;
+            z-index: 9999 !important;
+        }
+
+        .ui-datepicker-title {
+            display: flex;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .ui-datepicker-month,
+        .ui-datepicker-year {
+            background: #fff;
+            padding: 0px 1px;
+            display: flex;
+            width: fit-content;
+            text-align: right;
+            width: 54px;
+        }
+
+        .ui-datepicker .ui-datepicker-header {
+            background-color: #04366E;
+            /* border: 1px solid #ccc; */
+        }
+
+        .ui-state-default,
+        .ui-widget-content .ui-state-default {
+            border: none;
+        }
+
+        .ui-datepicker-calendar thead tr {
+            text-align: center;
+            font-weight: normal;
+            color: #9DA7AF;
+            font-size: 12px;
+            font-weight: normal;
+            background-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .ui-datepicker .ui-state-default {
+            background-color: #fff;
+            /* border: 1px solid #d3d3d3; */
+            color: #333;
+        }
+
+        .ui-datepicker .ui-state-highlight {
+            background-color: #04366E;
+            color: #fff;
+        }
+
+        .drp {
+            width: 18px;
+            height: 18px;
+            margin: 0px 5px;
+        }
+ 
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            color: #000;
+        }
+
+        .print {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .statement {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+        }
+
+        .info-block,
+        .summary-block {
+            margin-top: 20px;
+        }
+
+
+        
+
+        .statement-table {
+            /* background-color: #e6ffff; */
+            background-color: transparent;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* Header cells */
+        .statement-table th {
+            background-color: #e6ffff;
+            border-right: 0.5px solid #666;
+            border-top: 0.5px solid #666;
+            border-bottom: 0.5px solid #666;
+            padding: 2px 4px;
+        }
+
+        /* Left border for first header cell */
+        .statement-table th:first-child {
+            border-left: 0.5px solid #666;
+        }
+
+        /* Remove right border from last header cell (optional for clean edge) */
+        .statement-table th:last-child {
+            border-right: 0.5px solid #666;
+            /* ✅ Show full table right border */
+        }
+
+        /* Body cells */
+        .statement-table td {
+            background-color: #e6ffff;
+            border-right: 0.5px solid #666;
+            border-top: none;
+            border-bottom: none;
+            padding: 2px 4px;
+        }
+
+        /* Left border for first column */
+        .statement-table td:first-child {
+            border-left: 0.5px solid #666;
+        }
+
+        /* Right border for last column */
+        .statement-table td:last-child {
+            border-right: 0.5px solid #666;
+        }
+
+        /* Bottom border only on last row */
+        .statement-table tbody tr:last-child td {
+            border-bottom: 0.5px solid #666;
+        }
+        .statement-table th,
+.statement-table td {
+    background-color: #e6ffff; /* apply only to actual cells */
+}
+
+
+
+        .branch-details-table {
+            font-size: 12px;
+            font-family: 'Times New Roman', Times, serif;
+            border-collapse: collapse;
+            line-height: 0.8;
+        }
+
+        .branch-details-table td {
+            padding: 2px 4px;
+        }
