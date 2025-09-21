@@ -157,23 +157,29 @@ function download_pdf(response) {
     const element = document.getElementById('pdf-content');
 
     const opt = {
-        margin: [10, 10, 10, 10],
+        margin: [20, 15, 25, 15], // top, left, bottom, right - increased margins for better layout
         filename: 'hdfc_statement.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
+        image: { type: 'jpeg', quality: 0.98 }, // improved quality
         html2canvas: {
             scale: 2,
             useCORS: true,
             scrollX: 0,
             scrollY: 0,
             width: element.scrollWidth,
-            height: element.scrollHeight
+            height: element.scrollHeight,
+            allowTaint: false,
+            foreignObjectRendering: false
         },
         jsPDF: {
             unit: 'mm',
             format: 'a4',
             orientation: 'portrait'
         },
-        pagebreak: { mode: ['avoid-all'] }
+        pagebreak: {
+            mode: ['avoid-all', 'css', 'legacy'],
+            before: '.statement-table',
+            after: '.pdf-footer'
+        }
     };
 
     html2pdf()
@@ -191,6 +197,11 @@ function download_pdf(response) {
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
 
+                // Skip header/footer modifications for first page as it's already rendered by HTML
+                if (i === 1) {
+                    continue;
+                }
+
 
                   // ✅ Draw a box border on each page
     // const boxMarginLeft = 20;  // left margin
@@ -201,14 +212,14 @@ function download_pdf(response) {
     // pdf.setDrawColor(102, 102, 102);  // grey border
     // pdf.setLineWidth(0.75);
     // pdf.rect(boxMarginLeft, boxMarginTop, boxWidth, boxHeight);
-                // Add consistent header styling
+                // Add consistent header styling for pages 2+
                 try {
                     pdf.addImage(headerLogo, "PNG", 20, 15, 120, 15);
                 } catch (e) {
                     console.warn("Header logo failed to load:", e);
                 }
 
-                // Page number and header text styling
+                // Page number and header text styling for pages 2+
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(9);
                 pdf.setTextColor(0, 0, 0);
@@ -222,107 +233,33 @@ function download_pdf(response) {
                 const headerWidth = pdf.getTextWidth(headerText);
                 pdf.text(headerText, pageWidth - headerWidth - 20, 25);
 
-                /* --- Additional Header Content --- */
-                let headerY = 55 + 40;       // inside 60mm reserved header
-                let headerRightY = 60;
-
-                // 👉 Left Block (with aligned colons)
-                const leftLabelX = 30;
-                const leftColonX = leftLabelX + 70;
-                const leftValueX = leftColonX + 5;
-
-                pdf.setFont("times", "normal");
-                pdf.setFontSize(9);
-
-                function printLeftRow(label, value, y) {
-                    pdf.text(label, leftLabelX, y);
-                    pdf.text(":", leftColonX, y);
-                    if (value) pdf.text(value, leftValueX, y);
-                }
-
-
-
-
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(9);
-                pdf.setTextColor(0, 0, 0);
-
-                // starting position
-                let blockX = 30;
-                let blockY = headerY;
-                let lineHeight = 12;
-
-                // collect all lines
-                let lines = [
-                    { text: (response.user.full_name || "").toUpperCase() },
-                    { text: (response.user.street || "").toUpperCase() },
-                    { text: (response.user.landmark || "").toUpperCase() },
-                    { text: ((response.user.city || "") + ' ' + (response.user.pincode || "")).toUpperCase() },
-                    { text: (response.user.state || "").toUpperCase() },
-                    { text: (response.user.country || "").toUpperCase() },
-                    { text: "" },
-                    { text: "JOINT HOLDERS: " + (response.user.joint_holders || "").toUpperCase() }
-                ];
-
-
-                // calculate block dimensions
-                let blockWidth = 250; // adjust as needed
-                let blockHeight = lines.length * lineHeight + 10; // +10 for padding
-
-                // draw clean rectangle around customer details
+                // Add a separator line below header for pages 2+
                 pdf.setDrawColor(0, 0, 0);
                 pdf.setLineWidth(0.5);
-                pdf.rect(blockX - 5, blockY - 10, blockWidth, blockHeight);
+                pdf.line(20, 40, pageWidth - 20, 40);
 
-                // print customer details with consistent formatting
-                let currentY = blockY;
-                lines.forEach((line, index) => {
-                    if (index === 0) {
-                        pdf.setFont("helvetica", "bold");
-                        pdf.setFontSize(10);
-                    } else {
-                        pdf.setFont("helvetica", "normal");
-                        pdf.setFontSize(9);
-                    }
-                    pdf.text(line.text, blockX, currentY);
-                    currentY += lineHeight;
-                });
+                /* --- Skip customer details block for pages 2+ --- */
+                // Customer details are only shown on first page
+                let headerY = 55 + 40;
+                let headerRightY = 60;
 
-                currentY += 12;
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(8);
-                pdf.text("Nomination: Registered", 30, currentY);
+                // Skip all customer detail rendering for pages 2+
 
-                currentY += 15;
-                pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(10);
-                pdf.text("Statement Period: 01/04/2024 to 31/03/2025", 30, currentY);
+                // Skip customer details for pages 2+ - these are only on first page
 
 
-                // 👉 Right Block (with aligned colons)
-                const rightLabelX = pageWidth - 280;
-                const rightColonX = rightLabelX + 80;
-                const rightValueX = rightColonX + 5;
+                // Skip account info details for pages 2+ - these are only on first page
 
-                function printRightRow(label, value, y) {
-                    pdf.setFont("helvetica", "normal");
-                    pdf.setFontSize(8);
-                    pdf.text(label, rightLabelX, y);
-                    pdf.text(":", rightColonX, y);
-                    if (value) {
-                        pdf.setFont("helvetica", "normal");
-                        pdf.text(String(value), rightValueX, y);
-                    }
-                }
-
-                // Draw top and bottom borders for each page (adjust as necessary)
-                const topBorderY = 227;  // Adjust based on your content's layout
-                const bottomBorderY = pageHeight - 80; // Adjust based on your footer's position
+                // Add table borders for pages 2+ to maintain consistency
+                const topBorderY = 50;  // Start after header
+                const bottomBorderY = pageHeight - 80; // Before footer
 
                 pdf.setDrawColor(102, 102, 102);
-              
-
                 pdf.setLineWidth(0.78);
+
+                // Draw table continuation border
+                pdf.line(20, topBorderY, pageWidth - 20, topBorderY);
+                pdf.line(20, bottomBorderY, pageWidth - 20, bottomBorderY);
 
 
                 // if (i != 1 && i != totalPages) {
@@ -344,89 +281,50 @@ function download_pdf(response) {
 
 
 
-                printRightRow("Account Branch", (response.branch.branch_name || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Address", (response.branch.branch_address || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("City", (response.branch.city || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("State", (response.branch.state || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Phone no.", (response.user.mobile_number || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("OD Limit", (response.account_info.od_limit.toString() || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Currency", (response.account_info.currency || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Email", (response.user.email || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Cust ID", (response.account_info.user_id.toString() || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Account No", (response.account_info.account_no || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("A/C Open Date", (response.account_info.ac_open_date || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Account Status", (response.account_info.ac_status || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("IFSC", (response.branch.rtgs_neft_ifsc || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("MICR", "600240053", headerRightY);  // already fixed value
-                headerRightY += 9;
-                printRightRow("Branch Code", (response.branch.branch_code || "").toUpperCase(), headerRightY);
-                headerRightY += 9;
-                printRightRow("Account Type", response.account_info.account_type || "", headerRightY); // ✅ keep original case
+                // Skip account details for pages 2+
 
 
-                // Footer section with improved styling
+                // Footer section with improved styling for pages 2+
                 const leftMargin = 20;
-                let footerY = pageHeight - 60;
+                let footerY = pageHeight - 50;
+
+                // Add separator line above footer
+                pdf.setDrawColor(0, 0, 0);
+                pdf.setLineWidth(0.5);
+                pdf.line(20, footerY - 10, pageWidth - 20, footerY - 10);
 
                 pdf.setFont("helvetica", "bold");
                 pdf.setFontSize(10);
                 pdf.setTextColor(0, 102, 204);
                 pdf.text("HDFC BANK LIMITED", leftMargin, footerY);
 
-                footerY += 10;
+                footerY += 8;
                 pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(7);
+                pdf.setFontSize(6);
                 pdf.setTextColor(0, 102, 204);
                 pdf.text("*Closing balance includes funds earmarked for hold and uncleared funds", leftMargin, footerY);
 
-                footerY += 10;
+                footerY += 8;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(7);
-                const disclaimerText = "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement. The address on this statement is that on record with the Bank as at the day of requesting this statement.";
+                pdf.setFontSize(6);
+                const disclaimerText = "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement.";
                 const splitText = pdf.splitTextToSize(disclaimerText, pageWidth - 40);
                 pdf.text(splitText, leftMargin, footerY);
 
-                footerY += 15;
+                footerY += 12;
                 pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(7);
+                pdf.setFontSize(6);
                 pdf.text("State account branch GSTIN: 33AAACH2702H1Z7", leftMargin, footerY);
 
-                footerY += 8;
+                footerY += 6;
                 pdf.setFont("helvetica", "normal");
                 pdf.setTextColor(0, 0, 0);
-                pdf.text("HDFC Bank GSTIN details are available at", leftMargin, footerY);
+                pdf.text("HDFC Bank GSTIN details available at HDFC GST Portal", leftMargin, footerY);
 
-                pdf.setTextColor(0, 0, 255);
-                const linkText = "HDFC GST Portal";
-                const linkX = leftMargin + 158;
-                const linkY = footerY;
-
-                pdf.textWithLink(linkText, linkX, linkY, {
-                    url: "https://www.hdfcbank.com/personal/making-payments/online-tax-payment/goods-and-service-tax"
-                });
-
-                const linkWidth = pdf.getTextWidth(linkText);
-                pdf.setDrawColor(0, 0, 255);
-                pdf.setLineWidth(0.2);
-                pdf.line(linkX, linkY + 1, linkX + linkWidth, linkY + 1);
-
-                footerY += 8;
+                footerY += 6;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(7);
-                const addressText = "Registered Office Address: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013";
+                pdf.setFontSize(6);
+                const addressText = "Registered Office: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013";
                 const splitAddress = pdf.splitTextToSize(addressText, pageWidth - 40);
                 pdf.text(splitAddress, leftMargin, footerY);
             }
