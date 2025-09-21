@@ -158,7 +158,7 @@ function download_pdf(response) {
     const element = document.getElementById('pdf-content');
 
     const opt = {
-        margin: [35, 10, 45, 10], // top, left, bottom, right - increased to accommodate headers/footers
+        margin: [45, 10, 50, 10], // top, left, bottom, right - increased top margin for continuation pages
         filename: 'hdfc_statement.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
@@ -210,7 +210,7 @@ function download_pdf(response) {
                 if (i > 1) {
                     // Header logo for continuation pages
                     try {
-                        pdf.addImage(headerLogo, "PNG", 10, 10, 100, 12);
+                        pdf.addImage(headerLogo, "PNG", 10, 15, 100, 12);
                     } catch (e) {
                         console.warn("Header logo failed to load:", e);
                     }
@@ -219,21 +219,24 @@ function download_pdf(response) {
                     pdf.setFont("helvetica", "normal");
                     pdf.setFontSize(8);
                     pdf.setTextColor(0, 0, 0);
-                    const pageText = `Page ${i} of ${totalPages}`;
+                    const pageText = `Page No. ${i}`;
                     const textWidth = pdf.getTextWidth(pageText);
-                    pdf.text(pageText, (pageWidth - textWidth) / 2, 25);
+                    pdf.text(pageText, (pageWidth - textWidth) / 2, 20);
 
                     // Statement title on right
                     pdf.setFont("helvetica", "bold");
                     pdf.setFontSize(9);
-                    const headerText = "Account Statement";
+                    const headerText = "Statement of account";
                     const headerWidth = pdf.getTextWidth(headerText);
-                    pdf.text(headerText, pageWidth - headerWidth - 10, 20);
+                    pdf.text(headerText, pageWidth - headerWidth - 10, 25);
 
-                    // Add a line separator below header
+                    // Add a line separator below header with more space
                     pdf.setLineWidth(0.5);
                     pdf.setDrawColor(0, 0, 0);
-                    pdf.line(10, 30, pageWidth - 10, 30);
+                    pdf.line(10, 35, pageWidth - 10, 35);
+
+                    // Add extra spacing to push table content down
+                    // We need to ensure table content starts below Y=40 on continuation pages
                 }
 
                 // Content area for continuation pages - let the table flow naturally
@@ -241,7 +244,7 @@ function download_pdf(response) {
 
                 // Footer for all pages (with proper positioning)
                 const leftMargin = 10;
-                let footerY = pageHeight - 40;
+                let footerY = pageHeight - 45;
 
                 // Add footer separator line
                 pdf.setLineWidth(0.3);
