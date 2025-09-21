@@ -17,7 +17,7 @@
         }
 
         @page:not(:first) {
-            margin: 15mm 10mm 20mm 10mm;
+            margin: 40mm 10mm 20mm 10mm;
         }
 
         * {
@@ -91,6 +91,7 @@
             margin: 15px 0;
             page-break-inside: auto;
             table-layout: fixed;
+            border-spacing: 0;
         }
 
         .statement-table th {
@@ -107,6 +108,8 @@
 
         .statement-table thead {
             display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
         }
 
         .statement-table tbody {
@@ -125,7 +128,9 @@
 
         .statement-table tr {
             page-break-inside: avoid;
+            page-break-after: auto;
             height: auto;
+            min-height: 20px;
         }
 
         .statement-table .amount-col {
@@ -151,6 +156,18 @@
         .footer-link {
             color: #0066cc;
             text-decoration: underline;
+        }
+
+        /* Ensure proper spacing for continuation pages */
+        .statement-content {
+            page-break-before: auto;
+            clear: both;
+        }
+
+        /* Better control over page breaks */
+        @page {
+            orphans: 2;
+            widows: 2;
         }
     </style>
 </head>
