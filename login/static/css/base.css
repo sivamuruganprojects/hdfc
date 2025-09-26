@@ -11,35 +11,6 @@
             }
         }
 
-        /* PDF-specific styles for better page handling */
-        .statement-table {
-            page-break-inside: auto;
-            orphans: 2;
-            widows: 2;
-        }
-
-        .statement-table thead {
-            display: table-header-group;
-            page-break-inside: avoid;
-        }
-
-        .statement-table tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-        }
-
-        .statement-table tbody {
-            display: table-row-group;
-        }
-
-        .pdf-header {
-            page-break-after: avoid;
-        }
-
-        .pdf-footer {
-            page-break-before: avoid;
-        }
-
 
 
 

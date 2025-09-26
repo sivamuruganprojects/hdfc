@@ -124,13 +124,13 @@ function getpdf_data() {
                     // ========== Append to pdf_statement ==========
                     const pdfRow = document.createElement('tr');
                     pdfRow.innerHTML = `
-                        <td style="text-align: left; border: 1.5px solid #000 !important;">${txn.txn_date}</td>
-                        <td style="text-align: left; word-wrap: break-word; border: 1.5px solid #000 !important;">${txn.narration}</td>
-                        <td style="text-align: center; border: 1.5px solid #000 !important;">${txn.ref_no}</td>
-                        <td style="text-align: center; border: 1.5px solid #000 !important;">${txn.value_date}</td>
-                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
-                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
-                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
+                        <td>${txn.txn_date}</td>
+                        <td>${txn.narration}</td>
+                        <td>${txn.ref_no}</td>
+                        <td>${txn.value_date}</td>
+                        <td>${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
+                        <td>${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
+                        <td>${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
                     `;
                     pdfTbody.appendChild(pdfRow);
                 });
@@ -150,65 +150,25 @@ function getpdf_data() {
 }
 
 function download_pdf(response) {
-    console.log('Starting PDF generation...');
-    console.log('Response data:', response.account_info.od_limit);
+    console.log('response---->', response.account_info.od_limit)
 
     var od_lim = response.account_info.od_limit;
     // alert("test")
     const element = document.getElementById('pdf-content');
 
     const opt = {
-        margin: [45, 10, 50, 10], // top, left, bottom, right - increased top margin for continuation pages
-        filename: 'hdfc_statement.pdf',
+        margin: [227, 20, 80, 30],
+        filename: 'statement.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-            scale: 3.0,
-            useCORS: true,
-            scrollX: 0,
-            scrollY: 0,
-            width: element.scrollWidth,
-            height: element.scrollHeight,
-            allowTaint: false,
-            foreignObjectRendering: false,
-            letterRendering: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            removeContainer: true,
-            imageTimeout: 15000,
-            onclone: function(clonedDoc) {
-                // Ensure table borders are visible in the cloned document
-                const tables = clonedDoc.querySelectorAll('.statement-table');
-                tables.forEach(table => {
-                    table.style.borderCollapse = 'collapse';
-                    table.style.border = '2px solid #000';
-                });
-
-                const cells = clonedDoc.querySelectorAll('.statement-table th, .statement-table td');
-                cells.forEach(cell => {
-                    cell.style.border = '1.5px solid #000';
-                    cell.style.borderCollapse = 'collapse';
-                });
-
-                const headers = clonedDoc.querySelectorAll('.statement-table th');
-                headers.forEach(header => {
-                    header.style.backgroundColor = '#cce7ff';
-                    header.style.webkitPrintColorAdjust = 'exact';
-                    header.style.colorAdjust = 'exact';
-                });
-            }
-        },
+        html2canvas: { scale: 8, useCORS: true },
         jsPDF: {
-            unit: 'mm',
-            format: 'a4',
+            unit: 'pt',
+            format: [637.79527559, 841.88976378],
             orientation: 'portrait',
-            compress: true
+
         },
-        pagebreak: {
-            mode: ['css', 'legacy'],
-            before: '.pdf-footer',
-            avoid: ['.statement-table thead', '.statement-table tr', '.statement-summary'],
-            after: ['.pdf-header']
-        }
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        
     };
 
     html2pdf()
@@ -221,97 +181,244 @@ function download_pdf(response) {
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
 
-            console.log(`PDF generated with ${totalPages} pages`);
-            console.log(`Page dimensions: ${pageWidth} x ${pageHeight}`);
-
-            const headerLogo = "data:image/png;base64,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";
+            const headerLogo = "data:image/png;base64,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";
 
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
 
-                // Add header for pages 2 and beyond (first page already has full header from HTML)
-                if (i > 1) {
-                    // Header logo for continuation pages
-                    try {
-                        pdf.addImage(headerLogo, "PNG", 10, 15, 100, 12);
-                    } catch (e) {
-                        console.warn("Header logo failed to load:", e);
-                    }
 
-                    // Page number centered
-                    pdf.setFont("helvetica", "normal");
-                    pdf.setFontSize(8);
-                    pdf.setTextColor(0, 0, 0);
-                    const pageText = `Page No. ${i}`;
-                    const textWidth = pdf.getTextWidth(pageText);
-                    pdf.text(pageText, (pageWidth - textWidth) / 2, 20);
+                  // ✅ Draw a box border on each page
+    // const boxMarginLeft = 20;  // left margin
+    // const boxMarginTop = 227;  // start after header (same as your topBorderY)
+    // const boxWidth = pageWidth - 40; // leave 20px margin on each side
+    // const boxHeight = pageHeight - 307; // page height minus header & footer areas
 
-                    // Statement title on right
-                    pdf.setFont("helvetica", "bold");
-                    pdf.setFontSize(9);
-                    const headerText = "Statement of account";
-                    const headerWidth = pdf.getTextWidth(headerText);
-                    pdf.text(headerText, pageWidth - headerWidth - 10, 25);
-
-                    // Add a line separator below header with more space
-                    pdf.setLineWidth(0.5);
-                    pdf.setDrawColor(0, 0, 0);
-                    pdf.line(10, 35, pageWidth - 10, 35);
-
-                    // Add extra spacing to push table content down
-                    // We need to ensure table content starts below Y=40 on continuation pages
+    // pdf.setDrawColor(102, 102, 102);  // grey border
+    // pdf.setLineWidth(0.75);
+    // pdf.rect(boxMarginLeft, boxMarginTop, boxWidth, boxHeight);
+                // ✅ HEADER SECTION
+                try {
+                    // Logo at top-left
+                    pdf.addImage(headerLogo, "PNG", 25, 40, 150, 17);
+                } catch (e) {
+                    console.warn("Header logo failed to load:", e);
                 }
 
-                // Content area for continuation pages - let the table flow naturally
-
-
-                // Footer for all pages (with proper positioning)
-                const leftMargin = 10;
-                let footerY = pageHeight - 45;
-
-                // Add footer separator line
-                pdf.setLineWidth(0.3);
-                pdf.setDrawColor(150, 150, 150);
-                pdf.line(10, footerY - 5, pageWidth - 10, footerY - 5);
-
-                // Bank name
-                pdf.setFont("helvetica", "bold");
+                // Page No (top-center)
+                pdf.setFont("times", "normal");
                 pdf.setFontSize(8);
-                pdf.setTextColor(0, 102, 204);
+                pdf.setTextColor(0, 0, 0);
+                const pageText = `Page No.: ${i}`;
+                const textWidth = pdf.getTextWidth(pageText);
+                pdf.text(pageText, (pageWidth - textWidth) / 2, 20, { baseline: "top" });
+
+                // Header text (top-right)
+                const headerText = "Statement of account";
+                const headerWidth = pdf.getTextWidth(headerText);
+                pdf.text(headerText, pageWidth - headerWidth - 30, 20, { baseline: "top" });
+
+                /* --- Additional Header Content --- */
+                let headerY = 55 + 40;       // inside 60mm reserved header
+                let headerRightY = 60;
+
+                // 👉 Left Block (with aligned colons)
+                const leftLabelX = 30;
+                const leftColonX = leftLabelX + 70;
+                const leftValueX = leftColonX + 5;
+
+                pdf.setFont("times", "normal");
+                pdf.setFontSize(9);
+
+                function printLeftRow(label, value, y) {
+                    pdf.text(label, leftLabelX, y);
+                    pdf.text(":", leftColonX, y);
+                    if (value) pdf.text(value, leftValueX, y);
+                }
+
+
+
+
+                pdf.setFont("times", "bold");
+                pdf.setFontSize(9);
+                pdf.setTextColor(0, 0, 0);
+
+                // starting position
+                let blockX = 30;
+                let blockY = headerY;
+                let lineHeight = 12;
+
+                // collect all lines
+                let lines = [
+                    { text: (response.user.full_name || "").toUpperCase() },
+                    { text: (response.user.street || "").toUpperCase() },
+                    { text: (response.user.landmark || "").toUpperCase() },
+                    { text: ((response.user.city || "") + ' ' + (response.user.pincode || "")).toUpperCase() },
+                    { text: (response.user.state || "").toUpperCase() },
+                    { text: (response.user.country || "").toUpperCase() },
+                    { text: "" },
+                    { text: "JOINT HOLDERS: " + (response.user.joint_holders || "").toUpperCase() }
+                ];
+
+
+                // calculate block dimensions
+                let blockWidth = 250; // adjust as needed
+                let blockHeight = lines.length * lineHeight + 10; // +10 for padding
+
+                // draw rectangle around content
+                pdf.setDrawColor(0, 0, 0);
+                pdf.setLineWidth(1.5);
+                pdf.rect(blockX - 5, blockY - 10, blockWidth, blockHeight);
+
+                // print text inside block
+                let currentY = blockY;
+                lines.forEach(line => {
+                    if (line.bold) {
+                        pdf.setFont("times", "bold");
+                    } else {
+                        pdf.setFont("times", "normal");
+                    }
+                    pdf.text(line.text, blockX, currentY);
+                    currentY += lineHeight;
+                });
+
+                currentY += 12;
+                pdf.text("Nomination : Registered", 30, currentY);
+
+                currentY += 20;
+                pdf.text("Statement From : 01/04/2024       To : 31/03/2025", 30, currentY);
+
+
+                // 👉 Right Block (with aligned colons)
+                const rightLabelX = pageWidth - 280;
+                const rightColonX = rightLabelX + 80;
+                const rightValueX = rightColonX + 5;
+
+                function printRightRow(label, value, y) {
+                    pdf.text(label, rightLabelX, y);
+                    pdf.text(":", rightColonX, y);
+                    if (value) pdf.text(value, rightValueX, y);
+                }
+
+                // Draw top and bottom borders for each page (adjust as necessary)
+                const topBorderY = 227;  // Adjust based on your content's layout
+                const bottomBorderY = pageHeight - 80; // Adjust based on your footer's position
+
+                pdf.setDrawColor(102, 102, 102);
+              
+
+                pdf.setLineWidth(0.78);
+
+
+                // if (i != 1 && i != totalPages) {
+                //     pdf.line(20.5, topBorderY, pageWidth - 30.5, topBorderY);
+                // }
+                // if (i != totalPages && i != totalPages - 1) {
+                //     pdf.line(20.5, bottomBorderY, pageWidth - 30.5, bottomBorderY);
+
+                //     // ✅ Extend vertical lines till background ends
+                // const columnsX = [20.7, 61.69, 298.9, 387.3,429.3,494,543.8, pageWidth - 30.6];
+                // columnsX.forEach(x => {
+                //     pdf.line(x, topBorderY+20, x, bottomBorderY);
+                // });
+                // }
+                
+
+
+
+
+
+
+                printRightRow("Account Branch", (response.branch.branch_name || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Address", (response.branch.branch_address || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("City", (response.branch.city || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("State", (response.branch.state || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Phone no.", (response.user.mobile_number || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("OD Limit", (response.account_info.od_limit.toString() || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Currency", (response.account_info.currency || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Email", (response.user.email || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Cust ID", (response.account_info.user_id.toString() || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Account No", (response.account_info.account_no || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("A/C Open Date", (response.account_info.ac_open_date || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Account Status", (response.account_info.ac_status || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("IFSC", (response.branch.rtgs_neft_ifsc || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("MICR", "600240053", headerRightY);  // already fixed value
+                headerRightY += 9;
+                printRightRow("Branch Code", (response.branch.branch_code || "").toUpperCase(), headerRightY);
+                headerRightY += 9;
+                printRightRow("Account Type", response.account_info.account_type || "", headerRightY); // ✅ keep original case
+
+
+                // ✅ FOOTER SECTION (unchanged)
+                const leftMargin = 25;
+                let footerY = pageHeight - 60;
+
+                pdf.setFont("times", "bold");
+                pdf.setFontSize(9.5);
+                pdf.setTextColor(0, 0, 255);
                 pdf.text("HDFC BANK LIMITED", leftMargin, footerY);
 
-                footerY += 5;
-                // Balance disclaimer
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(5);
-                pdf.setTextColor(0, 102, 204);
+                footerY += 9;
+                pdf.setFont("times", "normal");
+                pdf.setFontSize(7.5);
+                pdf.setTextColor(0, 0, 255);
                 pdf.text("*Closing balance includes funds earmarked for hold and uncleared funds", leftMargin, footerY);
 
-                footerY += 4;
-                // Main disclaimer
+                footerY += 9;
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFontSize(5);
-                const disclaimerText = "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement. The address on this statement is that on record with the Bank as at the day of requesting this statement.";
-                const splitText = pdf.splitTextToSize(disclaimerText, pageWidth - 20);
-                pdf.text(splitText, leftMargin, footerY);
+                pdf.setFontSize(7.5);
+                pdf.text(
+                    "Contents of this statement will be considered correct if no error is reported within 30 days of receipt of statement. The address on this statement is that on record with the Bank as at the day of requesting this statement.",
+                    leftMargin,
+                    footerY,
+                    { maxWidth: pageWidth - 60 }
+                );
 
-                footerY += 8;
-                // GSTIN information
-                pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(5);
+                footerY += 18;
+                pdf.setFont("times", "bold");
+                pdf.setFontSize(7.5);
                 pdf.text("State account branch GSTIN: 33AAACH2702H1Z7", leftMargin, footerY);
 
-                footerY += 3;
-                // GST Portal information
-                pdf.setFont("helvetica", "normal");
-                pdf.text("HDFC Bank GSTIN details available at HDFC GST Portal", leftMargin, footerY);
+                footerY += 9;
+                pdf.setFont("times", "normal");
+                pdf.setTextColor(0, 0, 0);
+                pdf.text("HDFC Bank GSTIN number details are available at", leftMargin, footerY);
 
-                footerY += 4;
-                // Registered office
-                pdf.setFontSize(5);
-                const addressText = "Registered Office: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013";
-                const splitAddress = pdf.splitTextToSize(addressText, pageWidth - 20);
-                pdf.text(splitAddress, leftMargin, footerY);
+                pdf.setTextColor(0, 0, 255);
+                const linkText = "HDFC GST Portal";
+                const linkX = leftMargin + 158;
+                const linkY = footerY;
+
+                pdf.textWithLink(linkText, linkX, linkY, {
+                    url: "https://www.hdfcbank.com/personal/making-payments/online-tax-payment/goods-and-service-tax"
+                });
+
+                const linkWidth = pdf.getTextWidth(linkText);
+                pdf.setDrawColor(0, 0, 255);
+                pdf.setLineWidth(0.2);
+                pdf.line(linkX, linkY + 1, linkX + linkWidth, linkY + 1);
+
+                footerY += 9;
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFontSize(7.5);
+                pdf.text(
+                    "Registered Office Address: HDFC Bank House, Senapati Bapat Marg, Lower Parel, Mumbai 400013",
+                    leftMargin,
+                    footerY,
+                    { maxWidth: pageWidth - 60 }
+                );
             }
         })
         .save();
