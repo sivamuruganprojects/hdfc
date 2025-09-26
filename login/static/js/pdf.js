@@ -124,13 +124,13 @@ function getpdf_data() {
                     // ========== Append to pdf_statement ==========
                     const pdfRow = document.createElement('tr');
                     pdfRow.innerHTML = `
-                        <td style="text-align: left;">${txn.txn_date}</td>
-                        <td style="text-align: left; word-wrap: break-word;">${txn.narration}</td>
-                        <td style="text-align: center;">${txn.ref_no}</td>
-                        <td style="text-align: center;">${txn.value_date}</td>
-                        <td class="amount-col">${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
-                        <td class="amount-col">${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
-                        <td class="amount-col">${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
+                        <td style="text-align: left; border: 1.5px solid #000 !important;">${txn.txn_date}</td>
+                        <td style="text-align: left; word-wrap: break-word; border: 1.5px solid #000 !important;">${txn.narration}</td>
+                        <td style="text-align: center; border: 1.5px solid #000 !important;">${txn.ref_no}</td>
+                        <td style="text-align: center; border: 1.5px solid #000 !important;">${txn.value_date}</td>
+                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.withdrawal_amt ? txn.withdrawal_amt.toLocaleString() : ''}</td>
+                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.deposit_amt ? txn.deposit_amt.toLocaleString() : ''}</td>
+                        <td class="amount-col" style="border: 1.5px solid #000 !important;">${txn.running_balance ? txn.running_balance.toLocaleString() : ''}</td>
                     `;
                     pdfTbody.appendChild(pdfRow);
                 });
@@ -162,7 +162,7 @@ function download_pdf(response) {
         filename: 'hdfc_statement.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 2.5,
+            scale: 3.0,
             useCORS: true,
             scrollX: 0,
             scrollY: 0,
@@ -172,7 +172,30 @@ function download_pdf(response) {
             foreignObjectRendering: false,
             letterRendering: true,
             logging: false,
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            removeContainer: true,
+            imageTimeout: 15000,
+            onclone: function(clonedDoc) {
+                // Ensure table borders are visible in the cloned document
+                const tables = clonedDoc.querySelectorAll('.statement-table');
+                tables.forEach(table => {
+                    table.style.borderCollapse = 'collapse';
+                    table.style.border = '2px solid #000';
+                });
+
+                const cells = clonedDoc.querySelectorAll('.statement-table th, .statement-table td');
+                cells.forEach(cell => {
+                    cell.style.border = '1.5px solid #000';
+                    cell.style.borderCollapse = 'collapse';
+                });
+
+                const headers = clonedDoc.querySelectorAll('.statement-table th');
+                headers.forEach(header => {
+                    header.style.backgroundColor = '#cce7ff';
+                    header.style.webkitPrintColorAdjust = 'exact';
+                    header.style.colorAdjust = 'exact';
+                });
+            }
         },
         jsPDF: {
             unit: 'mm',

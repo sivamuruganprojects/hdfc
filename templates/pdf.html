@@ -92,11 +92,12 @@
             page-break-inside: auto;
             table-layout: fixed;
             border-spacing: 0;
+            border: 2px solid #000;
         }
 
         .statement-table th {
-            background-color: #e6f3ff;
-            border: 1px solid #000;
+            background-color: #cce7ff !important;
+            border: 1.5px solid #000 !important;
             padding: 8px 4px;
             font-weight: bold;
             text-align: center;
@@ -104,6 +105,8 @@
             page-break-inside: avoid;
             vertical-align: middle;
             word-wrap: break-word;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
         }
 
         .statement-table thead {
@@ -117,7 +120,7 @@
         }
 
         .statement-table td {
-            border: 1px solid #000;
+            border: 1.5px solid #000 !important;
             padding: 6px 4px;
             text-align: left;
             page-break-inside: avoid;
@@ -136,6 +139,7 @@
         .statement-table .amount-col {
             text-align: right;
             white-space: nowrap;
+            font-weight: normal;
         }
 
         .pdf-footer {
@@ -168,6 +172,25 @@
         @page {
             orphans: 2;
             widows: 2;
+        }
+
+        /* Force print colors */
+        @media print {
+            .statement-table th {
+                background-color: #cce7ff !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            .statement-table, .statement-table th, .statement-table td {
+                border: 1.5px solid #000 !important;
+            }
+        }
+
+        /* Ensure background colors display in PDF generation */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
         }
     </style>
 </head>
